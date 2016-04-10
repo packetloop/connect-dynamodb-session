@@ -1,0 +1,5 @@
+/.*
+/reports/
+/test/
+/*.log
+/circle.yml

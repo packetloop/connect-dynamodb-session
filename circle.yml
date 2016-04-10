@@ -1,0 +1,14 @@
+dependencies:
+  pre:
+    - npm set progress=false
+
+test:
+  override:
+    - npm run lint -- --debug --output-file reports/lint.xml --format junit
+    - npm run test
+    - npm run coverage
+    - cp reports/*.xml ${CIRCLE_TEST_REPORTS}
+
+general:
+  artifacts:
+    - reports
