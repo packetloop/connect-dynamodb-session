@@ -52,8 +52,11 @@ running again in ${this.cleanupInterval / 1000} seconds.`)
       this.client.get(sid)
         // only return sessions that haven't expired
         .then(({expires, content}) => (Date.now() <= expires ? content : null))
-        .catch(e => this.err(`Unable to get session sid:${sid}`, e))
-        .then(session => callback(null, session || null));
+        .then(session => callback(null, session || null))
+        .catch(error => {
+          this.err(`Unable to get session sid:${sid}`, error);
+          callback(error);
+        });
     }
 
     set(sid, session, callback) {
@@ -61,8 +64,11 @@ running again in ${this.cleanupInterval / 1000} seconds.`)
       const expires = this.getExpires(session);
       // add lastModified to the session object before serialising it
       this.client.put(sid, expires, Object.assign({}, session, {lastModified}))
-        .catch(e => this.err(`Unable to save session sid:${sid}`, e))
-        .then(() => callback(null));
+        .then(() => callback(null))
+        .catch(error => {
+          this.err(`Unable to save session sid:${sid}`, error);
+          callback(error);
+        });
     }
 
     touch(sid, session, callback) {
@@ -70,15 +76,21 @@ running again in ${this.cleanupInterval / 1000} seconds.`)
         callback(null);
       } else {
         this.client.setExpires(sid, this.getExpires(session))
-          .catch(e => this.err(`Unable to touch session sid:${sid}`, e))
-          .then(() => callback(null));
+          .then(() => callback(null))
+          .catch(error => {
+            this.err(`Unable to touch session sid:${sid}`, error);
+            callback(error);
+          });
       }
     }
 
     destroy(sid, callback) {
       this.client.delete(sid)
-        .catch(e => this.err(`Unable to delete session with sid ${sid}`, e))
-        .then(() => callback(null));
+        .then(() => callback(null))
+        .catch(error => {
+          this.err(`Unable to delete session sid:${sid}`, error);
+          callback(error);
+        });
     }
   }
 

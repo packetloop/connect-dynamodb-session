@@ -91,17 +91,17 @@ test('DynamoDB SessionStore', q => {
       }
     });
     store.get('bar', (err, session) => {
-      t.equal(session, null, 'session should be null');
-      t.equal(err, null, 'error should be null');
+      t.false(session, 'session should be null');
+      t.equal(err.name, 'SyntaxError', 'error should be an error');
       t.end();
     });
   });
 
-  q.test('Should not fail if can no session', t => {
+  q.test('Should fail if no session', t => {
     const store = testStore({});
     store.get('bar', (err, session) => {
-      t.equal(session, null, 'session should be null');
-      t.equal(err, null, 'error should be null');
+      t.false(session, null, 'session should be null');
+      t.equal(err.name, 'TypeError', 'error should be an error');
       t.end();
     });
   });
@@ -155,10 +155,10 @@ test('DynamoDB SessionStore', q => {
     });
   });
 
-  q.test('Should not fail if can not set session', t => {
+  q.test('Should fail if can not set session', t => {
     const store = testStore({client: {putItem: (_, callback) => callback(true)}});
     store.set('bar', {}, err => {
-      t.equal(err, null, 'error should be null');
+      t.equal(err.name, 'Error', 'error should be an error');
       t.end();
     });
   });
