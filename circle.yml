@@ -1,3 +1,7 @@
+machine:
+  node:
+    version: 5.9.1
+
 dependencies:
   pre:
     - npm set progress=false
@@ -8,6 +12,7 @@ test:
     - npm run test
     - npm run coverage
     - cp reports/*.xml ${CIRCLE_TEST_REPORTS}
+    - ./node_modules/.bin/codeclimate-test-reporter < ./reports/coverage/lcov.info
 
 general:
   artifacts:
