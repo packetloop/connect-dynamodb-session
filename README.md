@@ -2,11 +2,11 @@
 
 [DynamoDB](https://aws.amazon.com/dynamodb) session store for [Connect](https://github.com/senchalabs/connect) and [Express](http://expressjs.com/)
 
-[![Circle CI](https://circleci.com/gh/andysprout/connect-dynamodb-session.svg?style=svg)](https://circleci.com/gh/andysprout/connect-dynamodb-session)
-[![Test Coverage](https://codeclimate.com/github/andysprout/connect-dynamodb-session/badges/coverage.svg)](https://codeclimate.com/github/andysprout/connect-dynamodb-session/coverage)
-[![Code Climate](https://codeclimate.com/github/andysprout/connect-dynamodb-session/badges/gpa.svg)](https://codeclimate.com/github/andysprout/connect-dynamodb-session)
-[![Dependency Status](https://david-dm.org/andysprout/connect-dynamodb-session.svg)](https://david-dm.org/andysprout/connect-dynamodb-session)
-[![devDependency Status](https://david-dm.org/andysprout/connect-dynamodb-session/dev-status.svg)](https://david-dm.org/andysprout/connect-dynamodb-session#info=devDependencies)
+[![Circle CI](https://circleci.com/gh/packetloop/connect-dynamodb-session.svg?style=svg)](https://circleci.com/gh/packetloop/connect-dynamodb-session)
+[![Test Coverage](https://codeclimate.com/github/packetloop/connect-dynamodb-session/badges/coverage.svg)](https://codeclimate.com/github/packetloop/connect-dynamodb-session/coverage)
+[![Code Climate](https://codeclimate.com/github/packetloop/connect-dynamodb-session/badges/gpa.svg)](https://codeclimate.com/github/packetloop/connect-dynamodb-session)
+[![Dependency Status](https://david-dm.org/packetloop/connect-dynamodb-session.svg)](https://david-dm.org/packetloop/connect-dynamodb-session)
+[![devDependency Status](https://david-dm.org/packetloop/connect-dynamodb-session/dev-status.svg)](https://david-dm.org/packetloop/connect-dynamodb-session#info=devDependencies)
 
 ## Usage
 
@@ -33,7 +33,12 @@ const DynamoStore = require('connect-dynamodb-session')(session);
 
 app.use(session({
   secret: 'foo',
-  store: new DynamoStore(options)
+  store: new DynamoStore({
+    region: 'us-west-2',
+    tableName: 'mySessionTable',
+    cleanupInterval: 100000,
+    touchAfter: 0
+  })
 }));
 ```
 
@@ -49,8 +54,18 @@ app.use(session({
   store: new DynamoStore(options)
 }));
     ```
-  - `cleanupInterval` **(optional, default: 300000 (five minutes))** how often to scan the table and remove expired sessions. Set to `0` to never remove expired sessions.
-  - `touchAfter` **(optional, default: 10000 (ten seconds))** if the session hasn't changed, then don't persist it to dynamo more than once every 10 seconds. Set to `0` to always update dynamo **WARNING** setting to `0` can seriously impact your `WriteCapacityUnits`. Inspired by [connect-mongo](https://github.com/kcbanner/connect-mongo).
+  - `cleanupInterval` **(optional, default: 300000 (five minutes))** how often to wait in-between scans of the the table to remove expired sessions. Set to `0` to never remove expired sessions.
+  - `touchAfter` **(optional, default: 10000 (ten seconds))** if the session hasn't changed, then don't persist it to dynamo more than once every 10 seconds. Set to `0` to always update dynamo **WARNING** setting to `0` can seriously impact your `WriteCapacityUnits`. Inspired by [connect-mongo](https://github.com/kcbanner/connect-mongo). Requires the `resave` session option to be false:
+    ```js
+app.use(session({
+  secret: 'foo',
+  resave: false, //don't save session if unmodified
+  store: new DynamoStore({
+    region: 'us-west-2',
+    tableName: 'mySessionTable',
+  })
+}));
+    ```
   - `err` **(optional, default: `() => {}`)** error logging, called with `(message, error)`.
   - `log` **(optional, default: `() => {}`)** debug logging, called with `(message)`.
 
