@@ -50,16 +50,16 @@ app.use(session({
 }));
     ```
   - `cleanupInterval` **(optional, default: 300000 (five minutes))** how often to scan the table and remove expired sessions. Set to `0` to never remove expired sessions.
-  - `touchAfter` **(optional, default: 10000 (ten seconds))** if the session hasn't changed, then don't persist it to dynamo more than once every 10 seconds. Set to `0` to always update dynamo **WARNING** setting to `0` can seriously impact your `WriteCapacityUnits`. Inspired by [connect-mongo](https://github.com/kcbanner/connect-mongo)
-  - `err` (optional, default: `() => {}`) error logging, called with `(message, error)`
-  - `log` (optional, default: `() => {}`) debug logging, called with `(message)`
+  - `touchAfter` **(optional, default: 10000 (ten seconds))** if the session hasn't changed, then don't persist it to dynamo more than once every 10 seconds. Set to `0` to always update dynamo **WARNING** setting to `0` can seriously impact your `WriteCapacityUnits`. Inspired by [connect-mongo](https://github.com/kcbanner/connect-mongo).
+  - `err` **(optional, default: `() => {}`)** error logging, called with `(message, error)`.
+  - `log` **(optional, default: `() => {}`)** debug logging, called with `(message)`.
 
 ### AWS Options
 
-  - `region` (required (unless `awsClient` set)) aws region to use.
-  - `tableName` (required) name of the dynamodb table to use
-  - `endPoint` (optional) override the aws endpoint, for example to use a [local dynamodb](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html) for development
-  - `awsClient` (optional) override the aws dynamo db client, for testing or to use a pre-configured client.
+  - `region` **(required (unless `awsClient` set))** aws region to use.
+  - `tableName` **(required)** name of the dynamodb table to use.
+  - `endPoint` **(optional)** override the aws endpoint, for example to use a [local dynamodb](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html) for development.
+  - `awsClient` **(optional)** override the aws dynamo db client, for testing or to use a pre-configured client.
 
 ## Tests
 
