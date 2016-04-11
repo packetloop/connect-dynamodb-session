@@ -91,6 +91,7 @@ app.use(session({
 ## Roadmap
 
 * Add an `autoCreate` option to automatically create the dynamodb table if it doesn`t exist.
+* Add a `weakRead` option to allow weak consistency when getting sessions - would reduce the need for high `ReadCapacityUnits`.
 * Use [local dynamodb](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html) for integration testing.
 
 ## License
