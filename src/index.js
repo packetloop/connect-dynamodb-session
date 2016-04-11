@@ -12,18 +12,24 @@ export default ({Store}) => {
     constructor(options = {}) {
       super(options);
 
+      if (typeof options.tableName !== 'string') {
+        throw new TypeError('tableName must be a string');
+      }
+
       this.client = options.client || client(options);
       this.ttl = numberOr(options.ttl, 14 * 24 * 60 * 60 * 1000); // default two weeks
       this.cleanupInterval = numberOr(options.cleanupInterval, 5 * 60 * 1000); // default 5 minutes
       this.touchAfter = numberOr(options.touchAfter, 10 * 1000); // default ten seconds
-      if (this.cleanupInterval > 0) {
-        this.cleanup();
-      }
       this.err = options.err || (() => {});
       this.log = options.log || (() => {});
       this.client.init()
         .then(() => this.log(`SessionStore connected to ${options.tableName}`))
-        .catch(e => this.err(`Unable to connect to ${options.tableName}`, e));
+        .catch(e => this.err(`Unable to connect to ${options.tableName}`, e))
+        .then(() => {
+          if (this.cleanupInterval > 0) {
+            global.setTimeout(this.cleanup.bind(this), this.cleanupInterval);
+          }
+        });
     }
 
     getExpires(session) {
@@ -43,16 +49,21 @@ export default ({Store}) => {
 running again in ${this.cleanupInterval / 1000} seconds.`)
         )
         .catch(e => this.err('Unable to remove expired sessions', e))
-        .then(setTimeout(this.cleanup.bind(this), this.cleanupInterval));
+        .then(() => global.setTimeout(this.cleanup.bind(this), this.cleanupInterval))
     }
 
     // Public API
 
     get(sid, callback) {
       this.client.get(sid)
-        // only return sessions that haven't expired
-        .then(({expires, content}) => (Date.now() <= expires ? content : null))
-        .then(session => callback(null, session || null))
+        .then(data => {
+          // only return sessions that haven't expired
+          if (data && Date.now() <= data.expires) {
+            callback(null, data.content);
+          } else {
+            callback(null, null);
+          }
+        })
         .catch(error => {
           this.err(`Unable to get session sid:${sid}`, error);
           callback(error);
@@ -60,10 +71,12 @@ running again in ${this.cleanupInterval / 1000} seconds.`)
     }
 
     set(sid, session, callback) {
-      const lastModified = this.touchAfter > 0 ? Date.now() : undefined;
       const expires = this.getExpires(session);
-      // add lastModified to the session object before serialising it
-      this.client.put(sid, expires, Object.assign({}, session, {lastModified}))
+      // add lastModified to the session if touch after is enabled
+      const content = this.touchAfter > 0 ? Object.assign({}, session, {lastModified: Date.now()}) :
+        session;
+
+      this.client.put(sid, expires, content)
         .then(() => callback(null))
         .catch(error => {
           this.err(`Unable to save session sid:${sid}`, error);

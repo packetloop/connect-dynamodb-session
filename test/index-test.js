@@ -2,7 +2,7 @@
 
 import test from 'blue-tape';
 import sinon from 'sinon';
-import createStore from '../../src/index';
+import createStore from '../src/index';
 
 const DynamoStore = createStore({Store: null});
 
@@ -189,7 +189,7 @@ test('DynamoDB SessionStore', q => {
   });
 }).on('end', () => clock.restore());
 
-const oldSetTimeout = setTimeout;
+const oldSetTimeout = global.setTimeout;
 test('DynamoDB SessionStore cleanup no expired sessions', t => {
   // TODO make this less complicated
 
@@ -199,7 +199,7 @@ test('DynamoDB SessionStore cleanup no expired sessions', t => {
   // hasn't executed yet so the test will think it is done and exit without calling the function
   // sent to setTimeout
   let timeoutFn;
-  setTimeout = fn => { // eslint-disable-line no-native-reassign
+  global.setTimeout = fn => { // eslint-disable-line no-native-reassign
     timeoutFn = fn;
   };
 
@@ -271,8 +271,9 @@ test('DynamoDB SessionStore cleanup no expired sessions', t => {
       callback(null);
     }
   }});
+  oldSetTimeout(() => timeoutFn(), 10);
 }).on('end', () => {
-  setTimeout = oldSetTimeout; // eslint-disable-line no-native-reassign
+  global.setTimeout = oldSetTimeout; // eslint-disable-line no-native-reassign
 });
 
 

@@ -18,10 +18,15 @@ export default ({awsClient, region, endPoint, tableName}) => {
     get: id =>
       Promise.fromCallback(cb =>
         dynamo.getItem({TableName: tableName, ConsistentRead: true, Key: {id: {S: id}}}, cb)
-      ).then(data => ({
-        content: JSON.parse(data.Item.content.S.toString()),
-        expires: Number(data.Item.expires.N)
-      })),
+      ).then(data => {
+        if (data.Item) {
+          return {
+            content: JSON.parse(data.Item.content.S.toString()),
+            expires: Number(data.Item.expires.N)
+          };
+        }
+        return null;
+      }),
 
     put: (id, expires, content) => Promise.fromCallback(cb =>
       dynamo.putItem({
