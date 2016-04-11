@@ -15,8 +15,7 @@ export default ({awsClient, region, endPoint, tableName}) => {
       dynamo.describeTable({TableName: tableName}, cb)
     ),
 
-    get: id =>
-      Promise.fromCallback(cb =>
+    get: id => Promise.fromCallback(cb =>
         dynamo.getItem({TableName: tableName, ConsistentRead: true, Key: {id: {S: id}}}, cb)
       ).then(data => {
         if (data.Item) {

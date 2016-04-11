@@ -49,7 +49,7 @@ export default ({Store}) => {
 running again in ${this.cleanupInterval / 1000} seconds.`)
         )
         .catch(e => this.err('Unable to remove expired sessions', e))
-        .then(() => global.setTimeout(this.cleanup.bind(this), this.cleanupInterval))
+        .then(() => global.setTimeout(this.cleanup.bind(this), this.cleanupInterval));
     }
 
     // Public API
