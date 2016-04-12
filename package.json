@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andysprout/connect-dynamodb-session.git"
+    "url": "git+https://github.com/packetloop/connect-dynamodb-session.git"
   },
   "keywords": [
     "connect",
@@ -24,7 +24,7 @@
   "author": "Andrew Stewart <andy@universalsprout.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/andysprout/connect-dynamodb-session/issues"
+    "url": "https://github.com/packetloop/connect-dynamodb-session/issues"
   },
   "dependencies": {
     "aws-sdk": "2.3.3",
