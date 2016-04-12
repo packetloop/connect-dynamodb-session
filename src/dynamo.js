@@ -3,22 +3,22 @@
 import AWS from 'aws-sdk';
 import Promise from 'bluebird';
 
-export default ({awsClient, region, endPoint, tableName}) => {
-  const dynamo = awsClient || new AWS.DynamoDB({region, endpoint: endPoint});
+export default ({awsClient: aws, region, endPoint, tableName}) => {
+  const awsClient = aws || new AWS.DynamoDB({region, endpoint: endPoint});
 
   const deleteItem = id => Promise.fromCallback(cb =>
-    dynamo.deleteItem({TableName: tableName, Key: {id: {S: id}}}, cb)
+    awsClient.deleteItem({TableName: tableName, Key: {id: {S: id}}}, cb)
   );
 
   return {
     init: () => Promise.fromCallback(cb =>
-      dynamo.describeTable({TableName: tableName}, cb)
+      awsClient.describeTable({TableName: tableName}, cb)
     ),
 
     get: id => Promise.fromCallback(cb =>
-        dynamo.getItem({TableName: tableName, ConsistentRead: true, Key: {id: {S: id}}}, cb)
+        awsClient.getItem({TableName: tableName, ConsistentRead: true, Key: {id: {S: id}}}, cb)
       ).then(data => {
-        if (data.Item) {
+        if (data.Item && data.Item.content && data.Item.expires) {
           return {
             content: JSON.parse(data.Item.content.S.toString()),
             expires: Number(data.Item.expires.N)
@@ -28,7 +28,7 @@ export default ({awsClient, region, endPoint, tableName}) => {
       }),
 
     put: (id, expires, content) => Promise.fromCallback(cb =>
-      dynamo.putItem({
+      awsClient.putItem({
         TableName: tableName, Item: {
           id: {S: id},
           expires: {N: expires.toString()},
@@ -38,7 +38,7 @@ export default ({awsClient, region, endPoint, tableName}) => {
     ),
 
     setExpires: (id, expires) => Promise.fromCallback(cb =>
-      dynamo.updateItem({
+      awsClient.updateItem({
         TableName: tableName,
         Key: {id: {S: id}},
         UpdateExpression: 'SET expires = :value',
@@ -50,7 +50,7 @@ export default ({awsClient, region, endPoint, tableName}) => {
 
     deleteExpired: when => {
       const scan = startKey => Promise.fromCallback(cb =>
-        dynamo.scan({
+        awsClient.scan({
           TableName: tableName,
           ScanFilter: {
             expires: {
@@ -63,7 +63,7 @@ export default ({awsClient, region, endPoint, tableName}) => {
         }, cb)
       );
 
-      const deletePage = ({scaned, deleted}, startKey = null) =>
+      const deletePage = ({scanned, deleted}, startKey = null) =>
         // perform the scan to find expired sessions
         scan(startKey)
           // use Promise.each to delete each of them one by one so we don't use all the
@@ -73,7 +73,7 @@ export default ({awsClient, region, endPoint, tableName}) => {
             .then(ids => {
               const lastKey = data.LastEvaluatedKey;
               const stats = {
-                scanned: scaned + data.ScannedCount,
+                scanned: scanned + data.ScannedCount,
                 deleted: deleted + ids.length
               };
               // if no key, then we're done

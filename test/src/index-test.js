@@ -1,10 +1,10 @@
 'use strict';
 
-import {withFakeTimers} from './helpers';
+import {withFakeTimers} from '../helpers';
 import sinon from 'sinon';
 require('sinon-stub-promise')(sinon);
 
-import createStore from '../src/index';
+import createStore from '../../src/index';
 
 const DynamoStore = createStore({Store: null});
 

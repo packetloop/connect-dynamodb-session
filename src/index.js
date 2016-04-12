@@ -1,6 +1,6 @@
 'use strict';
 
-import client from './dynamo';
+import dynamo from './dynamo';
 
 const numberOr = (n, defaultVal) => {
   if (typeof n === 'number') return n;
@@ -16,7 +16,7 @@ export default ({Store}) => {
         throw new TypeError('tableName must be a string');
       }
 
-      this.client = options.client || client(options);
+      this.client = options.client || dynamo(options);
       this.ttl = numberOr(options.ttl, 14 * 24 * 60 * 60 * 1000); // default two weeks
       this.cleanupInterval = numberOr(options.cleanupInterval, 5 * 60 * 1000); // default 5 minutes
       this.touchAfter = numberOr(options.touchAfter, 10 * 1000); // default ten seconds
