@@ -5,6 +5,7 @@
 [![Circle CI](https://circleci.com/gh/packetloop/connect-dynamodb-session.svg?style=svg)](https://circleci.com/gh/packetloop/connect-dynamodb-session)
 [![Test Coverage](https://codeclimate.com/github/packetloop/connect-dynamodb-session/badges/coverage.svg)](https://codeclimate.com/github/packetloop/connect-dynamodb-session/coverage)
 [![Code Climate](https://codeclimate.com/github/packetloop/connect-dynamodb-session/badges/gpa.svg)](https://codeclimate.com/github/packetloop/connect-dynamodb-session)
+[![Issue Count](https://codeclimate.com/github/packetloop/connect-dynamodb-session/badges/issue_count.svg)](https://codeclimate.com/github/packetloop/connect-dynamodb-session)
 [![Dependency Status](https://david-dm.org/packetloop/connect-dynamodb-session.svg)](https://david-dm.org/packetloop/connect-dynamodb-session)
 [![devDependency Status](https://david-dm.org/packetloop/connect-dynamodb-session/dev-status.svg)](https://david-dm.org/packetloop/connect-dynamodb-session#info=devDependencies)
 
@@ -91,6 +92,7 @@ app.use(session({
 ## Roadmap
 
 * Add an `autoCreate` option to automatically create the dynamodb table if it doesn`t exist.
+* Add a `weakRead` option to allow weak consistency when getting sessions - would reduce the need for high `ReadCapacityUnits`.
 * Use [local dynamodb](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html) for integration testing.
 
 ## License
