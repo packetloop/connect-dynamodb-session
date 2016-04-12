@@ -5,6 +5,7 @@
 [![Circle CI](https://circleci.com/gh/packetloop/connect-dynamodb-session.svg?style=svg)](https://circleci.com/gh/packetloop/connect-dynamodb-session)
 [![Test Coverage](https://codeclimate.com/github/packetloop/connect-dynamodb-session/badges/coverage.svg)](https://codeclimate.com/github/packetloop/connect-dynamodb-session/coverage)
 [![Code Climate](https://codeclimate.com/github/packetloop/connect-dynamodb-session/badges/gpa.svg)](https://codeclimate.com/github/packetloop/connect-dynamodb-session)
+[![Issue Count](https://codeclimate.com/github/packetloop/connect-dynamodb-session/badges/issue_count.svg)](https://codeclimate.com/github/packetloop/connect-dynamodb-session)
 [![Dependency Status](https://david-dm.org/packetloop/connect-dynamodb-session.svg)](https://david-dm.org/packetloop/connect-dynamodb-session)
 [![devDependency Status](https://david-dm.org/packetloop/connect-dynamodb-session/dev-status.svg)](https://david-dm.org/packetloop/connect-dynamodb-session#info=devDependencies)
 
