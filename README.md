@@ -76,10 +76,15 @@ app.use(session({
 
 ### AWS Options
 
-  - `region` **(required (unless `awsClient` set))** aws region to use.
+  - `region` **(required unless `awsClient` set)** aws region to use.
   - `tableName` **(required)** name of the dynamodb table to use.
-  - `endPoint` **(optional)** override the aws endpoint, for example to use a [local dynamodb](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html) for development.
+  - `endpoint` **(optional)** override the aws endpoint, for example to use a [local dynamodb](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html) for development.
   - `awsClient` **(optional)** override the aws dynamo db client, for testing or to use a pre-configured client.
+  - `autoCreate` **(optional, default: false)** if the table does not exist in aws, then attempt to create it on init
+  - `readCapacity` **(optional, default: 5)** if `autoCreate` is `true`, and the table does not exist, then this setting is used to create the table *NOTE* this setting does not edit the capacity of a table that already exists.
+  - `writeCapacity` **(optional, default: 5)** if `autoCreate` is `true`, and the table does not exist, then this setting is used to create the table *NOTE* this setting does not edit the capacity of a table that already exists.
+  - `consistentRead` **(optional, default: true)** if this is set to false, then getting sessions is down with weak consistency which will reduce your reqired ReadCapacityUnits, but may cause issues, especially if you have multiple instances of your node server connecting to the same table.
+  
 
 ## Tests
 
@@ -91,8 +96,6 @@ app.use(session({
 
 ## Roadmap
 
-* Add an `autoCreate` option to automatically create the dynamodb table if it doesn`t exist.
-* Add a `weakRead` option to allow weak consistency when getting sessions - would reduce the need for high `ReadCapacityUnits`.
 * Use [local dynamodb](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html) for integration testing.
 
 ## License
