@@ -60,7 +60,7 @@ app.use(session({
   - `cleanupInterval` **(optional, default: 300000 (five minutes))** how often to wait in-between scans of the the table to remove expired sessions. Set to `0` to never remove expired sessions.
   - `touchAfter` **(optional, default: 10000 (ten seconds))** if the session hasn't changed, then don't persist it to dynamo more than once every 10 seconds. Set to `0` to always update dynamo **WARNING** setting to `0` can seriously impact your `WriteCapacityUnits`. Inspired by [connect-mongo](https://github.com/kcbanner/connect-mongo). Requires the `resave` session option to be false: 
 
-  ```js
+    ```js
 app.use(session({
   secret: 'foo',
   resave: false, //don't save session if unmodified
