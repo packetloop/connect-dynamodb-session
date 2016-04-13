@@ -60,7 +60,7 @@ app.use(session({
   - `cleanupInterval` **(optional, default: 300000 (five minutes))** how often to wait in-between scans of the the table to remove expired sessions. Set to `0` to never remove expired sessions.
   - `touchAfter` **(optional, default: 10000 (ten seconds))** if the session hasn't changed, then don't persist it to dynamo more than once every 10 seconds. Set to `0` to always update dynamo **WARNING** setting to `0` can seriously impact your `WriteCapacityUnits`. Inspired by [connect-mongo](https://github.com/kcbanner/connect-mongo). Requires the `resave` session option to be false: 
 
-  ```js
+    ```js
 app.use(session({
   secret: 'foo',
   resave: false, //don't save session if unmodified
@@ -76,10 +76,15 @@ app.use(session({
 
 ### AWS Options
 
-  - `region` **(required (unless `awsClient` set))** aws region to use.
+  - `region` **(required unless `awsClient` set)** aws region to use.
   - `tableName` **(required)** name of the dynamodb table to use.
-  - `endPoint` **(optional)** override the aws endpoint, for example to use a [local dynamodb](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html) for development.
+  - `endpoint` **(optional)** override the aws endpoint, for example to use a [local dynamodb](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html) for development.
   - `awsClient` **(optional)** override the aws dynamo db client, for testing or to use a pre-configured client.
+  - `autoCreate` **(optional, default: false)** if the table does not exist in aws, then attempt to create it on init
+  - `readCapacity` **(optional, default: 5)** if `autoCreate` is `true`, and the table does not exist, then this setting is used to create the table *NOTE* this setting does not edit the capacity of a table that already exists.
+  - `writeCapacity` **(optional, default: 5)** if `autoCreate` is `true`, and the table does not exist, then this setting is used to create the table *NOTE* this setting does not edit the capacity of a table that already exists.
+  - `consistentRead` **(optional, default: true)** if this is set to false, then getting sessions is down with weak consistency which will reduce your reqired ReadCapacityUnits, but may cause issues, especially if you have multiple instances of your node server connecting to the same table.
+  
 
 ## Tests
 
@@ -91,8 +96,6 @@ app.use(session({
 
 ## Roadmap
 
-* Add an `autoCreate` option to automatically create the dynamodb table if it doesn`t exist.
-* Add a `weakRead` option to allow weak consistency when getting sessions - would reduce the need for high `ReadCapacityUnits`.
 * Use [local dynamodb](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html) for integration testing.
 
 ## License

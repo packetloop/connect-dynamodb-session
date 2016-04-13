@@ -22,7 +22,7 @@ export default ({Store}) => {
       this.touchAfter = numberOr(options.touchAfter, 10 * 1000); // default ten seconds
       this.err = options.err || (() => {});
       this.log = options.log || (() => {});
-      this.client.init()
+      this.client.init(options.autoCreate)
         .then(() => this.log(`SessionStore connected to ${options.tableName}`))
         .catch(e => this.err(`Unable to connect to ${options.tableName}`, e))
         .then(() => {
@@ -72,11 +72,12 @@ running again in ${this.cleanupInterval / 1000} seconds.`)
 
     set(sid, session, callback) {
       const expires = this.getExpires(session);
-      // add lastModified to the session if touch after is enabled
-      const content = this.touchAfter > 0 ? Object.assign({}, session, {lastModified: Date.now()}) :
-        session;
+      if (this.touchAfter > 0) {
+        session.lastModified = Date.now(); // eslint-disable-line no-param-reassign
+      }
 
-      this.client.put(sid, expires, content)
+      console.log('setting');
+      this.client.put(sid, expires, session)
         .then(() => callback(null))
         .catch(error => {
           this.err(`Unable to save session sid:${sid}`, error);
@@ -85,8 +86,13 @@ running again in ${this.cleanupInterval / 1000} seconds.`)
     }
 
     touch(sid, session, callback) {
-      if (this.touchAfter > 0 && Date.now() - session.lastModified < this.touchAfter) {
-        callback(null);
+      if (this.touchAfter > 0) {
+        if (Date.now() - session.lastModified < this.touchAfter) {
+          callback(null);
+        } else {
+          session.lastModified = Date.now(); // eslint-disable-line no-param-reassign
+          this.set(sid, session, callback);
+        }
       } else {
         this.client.setExpires(sid, this.getExpires(session))
           .then(() => callback(null))

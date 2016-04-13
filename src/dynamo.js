@@ -3,33 +3,47 @@
 import AWS from 'aws-sdk';
 import Promise from 'bluebird';
 
-export default ({awsClient: aws, region, endPoint, tableName}) => {
-  const awsClient = aws || new AWS.DynamoDB({region, endpoint: endPoint});
+export default ({awsClient: aws, region, endpoint, tableName: TableName,
+  consistentRead: ConsistentRead = true,
+  readCapacity: ReadCapacityUnits = 5,
+  writeCapacity: WriteCapacityUnits = 5}) => {
+  const awsClient = aws || new AWS.DynamoDB({region, endpoint});
 
   const deleteItem = id => Promise.fromCallback(cb =>
-    awsClient.deleteItem({TableName: tableName, Key: {id: {S: id}}}, cb)
+    awsClient.deleteItem({TableName, Key: {id: {S: id}}}, cb)
   );
 
   return {
-    init: () => Promise.fromCallback(cb =>
-      awsClient.describeTable({TableName: tableName}, cb)
-    ),
+    init: (autoCreate = false) => {
+      const describe = Promise.fromCallback(cb => awsClient.describeTable({TableName}, cb));
+      if (autoCreate) {
+        return describe.catch(() => Promise.fromCallback(cb =>
+          awsClient.createTable({
+            TableName,
+            AttributeDefinitions: [{AttributeName: 'id', AttributeType: 'S'}],
+            KeySchema: [{AttributeName: 'id', KeyType: 'HASH'}],
+            ProvisionedThroughput: {ReadCapacityUnits, WriteCapacityUnits}
+          }, cb))
+        );
+      }
+      return describe;
+    },
 
     get: id => Promise.fromCallback(cb =>
-        awsClient.getItem({TableName: tableName, ConsistentRead: true, Key: {id: {S: id}}}, cb)
-      ).then(data => {
-        if (data.Item && data.Item.content && data.Item.expires) {
-          return {
-            content: JSON.parse(data.Item.content.S.toString()),
-            expires: Number(data.Item.expires.N)
-          };
-        }
-        return null;
-      }),
+      awsClient.getItem({TableName, ConsistentRead, Key: {id: {S: id}}}, cb)
+    ).then(data => {
+      if (data.Item && data.Item.content && data.Item.expires) {
+        return {
+          content: JSON.parse(data.Item.content.S.toString()),
+          expires: Number(data.Item.expires.N)
+        };
+      }
+      return null;
+    }),
 
     put: (id, expires, content) => Promise.fromCallback(cb =>
       awsClient.putItem({
-        TableName: tableName, Item: {
+        TableName, Item: {
           id: {S: id},
           expires: {N: expires.toString()},
           content: {S: JSON.stringify(content)}
@@ -39,7 +53,7 @@ export default ({awsClient: aws, region, endPoint, tableName}) => {
 
     setExpires: (id, expires) => Promise.fromCallback(cb =>
       awsClient.updateItem({
-        TableName: tableName,
+        TableName,
         Key: {id: {S: id}},
         UpdateExpression: 'SET expires = :value',
         ExpressionAttributeValues: {':value': {N: expires.toString()}}
@@ -51,7 +65,7 @@ export default ({awsClient: aws, region, endPoint, tableName}) => {
     deleteExpired: when => {
       const scan = startKey => Promise.fromCallback(cb =>
         awsClient.scan({
-          TableName: tableName,
+          TableName,
           ScanFilter: {
             expires: {
               AttributeValueList: [{N: when.toString()}],

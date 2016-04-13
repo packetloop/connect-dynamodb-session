@@ -99,36 +99,41 @@ withFakeTimers('Should only touch if not modified recently', (t, clock) => {
   const now = 123456789;
   clock.tick(now);
   const id = 'abc';
-  const recentSession = {foo: 'bar', cookie: {expires: 321}, lastModified: now - 100};
-  const oldSession = {foo: 'bar', cookie: {expires: 321}, lastModified: now - 100000};
+  const base = {foo: 'bar', cookie: {expires: 321}};
+  const recentSession = () => Object.assign({lastModified: now - 100}, base);
+  const oldSession = () => Object.assign({lastModified: now - 100000}, base);
 
-  const setExpires = sinon.stub();
-  setExpires.withArgs(id, 321).returnsPromise().resolves();
-  setExpires.returnsPromise().rejects('some error');
+  const put = sinon.stub();
+  put.withArgs(id, 321).returnsPromise().resolves();
+  put.returnsPromise().rejects('some error');
 
   const store = new DynamoStore({
-    client: mockClient({setExpires}),
+    client: mockClient({put}),
     tableName: 'foo',
     touchAfter: 300
   });
 
-  store.touch(id, recentSession, err => {
+  store.touch(id, recentSession(), err => {
     t.comment('touch should do nothing for a recently modified session');
     t.false(err, 'error should be null');
-    t.equal(setExpires.callCount, 0, 'set expires should not have been called');
+    t.equal(put.callCount, 0, 'put should not have been called');
   });
 
-  store.touch(id, oldSession, err => {
+  store.touch(id, oldSession(), err => {
     t.comment('touch should update expires for older sessions');
     t.false(err, 'error should be null');
-    t.equal(setExpires.callCount, 1, 'set expires should have been called');
+    t.equal(put.callCount, 1, 'put should have been called once');
   });
 
-  store.touch('error', oldSession, err => {
+  store.touch('error', oldSession(), err => {
     t.comment('errors should be passed to callback');
     t.equal(err, 'some error', 'error should be as expected');
-    t.equal(setExpires.callCount, 2, 'set expires should have been called twice');
+    t.equal(put.callCount, 2, 'put should have been called twice');
   });
+
+  const setExpires = sinon.stub();
+  setExpires.withArgs(id, 321).returnsPromise().resolves();
+  setExpires.returnsPromise().rejects('some error');
 
   const alwaysTouch = new DynamoStore({
     client: mockClient({setExpires}),
@@ -136,16 +141,16 @@ withFakeTimers('Should only touch if not modified recently', (t, clock) => {
     touchAfter: 0
   });
 
-  alwaysTouch.touch(id, recentSession, err => {
+  alwaysTouch.touch(id, recentSession(), err => {
     t.comment('touch should update expires for recently modified session');
     t.false(err, 'error should be null');
-    t.equal(setExpires.callCount, 3, 'set expires should have been called thrice');
+    t.equal(setExpires.callCount, 1, 'set expires should have been called once');
   });
 
-  alwaysTouch.touch(id, oldSession, err => {
+  alwaysTouch.touch(id, oldSession(), err => {
     t.comment('touch should update expires for older sessions');
     t.false(err, 'error should be null');
-    t.equal(setExpires.callCount, 4, 'set expires should have been called four times');
+    t.equal(setExpires.callCount, 2, 'set expires should have been called twice');
     t.end();
   });
 });
@@ -189,6 +194,7 @@ withFakeTimers('Should cleanup', (t, clock) => {
     client: mockClient({deleteExpired}),
     tableName: 'foo',
     cleanupInterval: 50,
+    touchAfter: 500,
     err: logger
   }))();
 
