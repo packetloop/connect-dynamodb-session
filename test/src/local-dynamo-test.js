@@ -137,7 +137,7 @@ sequence('Should be able to get and set a session', [
   (t, next, clock) => {
     t.comment('Advancing the clock to expire the session and trigger cleanup');
     clock.tick(500);
-    next();
+    next(500); // wait for cleanup
   },
 
   (t, next) => {
