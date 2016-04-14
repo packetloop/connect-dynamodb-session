@@ -66,13 +66,9 @@ export default ({awsClient: aws, region, endpoint, tableName: TableName,
       const scan = startKey => Promise.fromCallback(cb =>
         awsClient.scan({
           TableName,
-          ScanFilter: {
-            expires: {
-              AttributeValueList: [{N: when.toString()}],
-              ComparisonOperator: 'LT'
-            }
-          },
-          AttributesToGet: ['id'],
+          FilterExpression: 'expires < :when',
+          ExpressionAttributeValues: {':when': {N: when.toString()}},
+          ProjectionExpression: 'id',
           ExclusiveStartKey: startKey
         }, cb)
       );

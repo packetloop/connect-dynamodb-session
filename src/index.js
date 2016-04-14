@@ -76,7 +76,6 @@ running again in ${this.cleanupInterval / 1000} seconds.`)
         session.lastModified = Date.now(); // eslint-disable-line no-param-reassign
       }
 
-      console.log('setting');
       this.client.put(sid, expires, session)
         .then(() => callback(null))
         .catch(error => {

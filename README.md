@@ -11,21 +11,6 @@
 
 ## Usage
 
-### Create the table
-For example using the aws cli:
-
-```bash
-aws \
-    --region us-west-2 \
-    dynamodb create-table \
-    --table-name ${YOUR_TABLE_NAME} \
-    --attribute-definitions AttributeName=id,AttributeType=S \
-    --key-schema AttributeName=id,KeyType=HASH \
-    --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
-```
-
-Be sure to read the [aws documentation](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ProvisionedThroughput.html) about `ReadCapacityUnits` and `WriteCapacityUnits` before deploying to production. 
-
 ### Express or Connect integration
 
 ```js
@@ -43,6 +28,21 @@ app.use(session({
 }));
 ```
 
+### Create the table (optional - alternatively use the `autoCreate` option, see below)
+
+For example using the aws cli:
+
+```bash
+aws \
+    --region us-west-2 \
+    dynamodb create-table \
+    --table-name ${YOUR_TABLE_NAME} \
+    --attribute-definitions AttributeName=id,AttributeType=S \
+    --key-schema AttributeName=id,KeyType=HASH \
+    --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+```
+
+Be sure to read the [aws documentation](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ProvisionedThroughput.html) about `ReadCapacityUnits` and `WriteCapacityUnits` before deploying to production. 
 
 ## Options
 
@@ -85,7 +85,6 @@ app.use(session({
   - `writeCapacity` **(optional, default: 5)** if `autoCreate` is `true`, and the table does not exist, then this setting is used to create the table *NOTE* this setting does not edit the capacity of a table that already exists.
   - `consistentRead` **(optional, default: true)** if this is set to false, then getting sessions is down with weak consistency which will reduce your reqired ReadCapacityUnits, but may cause issues, especially if you have multiple instances of your node server connecting to the same table.
   
-
 ## Tests
 
 ```
@@ -93,10 +92,6 @@ app.use(session({
   npm run test
   npm run coverage
 ```
-
-## Roadmap
-
-* Use [local dynamodb](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html) for integration testing.
 
 ## License
 
