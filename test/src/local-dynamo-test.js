@@ -24,6 +24,7 @@ const start = 100;
 const sessionNoCookie = {foo: 'bar'};
 const sessionWithCookie = {foo: 'moo', cookie: {expires: 500}};
 
+AWS.config.update({accessKeyId: 'akid', secretAccessKey: 'secret'});
 const awsClient = new AWS.DynamoDB({region, endpoint});
 const getItem = (t, fn) => awsClient.getItem({TableName: 'foo', Key: {id: {S: id}}},
   (err, data) => {
