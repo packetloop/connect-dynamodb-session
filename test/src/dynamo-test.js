@@ -119,13 +119,9 @@ test('Should pass delete errors on', t => {
 
 const scanQuery = (when, startKey = null) => ({
   TableName: tableName,
-  ScanFilter: {
-    expires: {
-      AttributeValueList: [{N: when.toString()}],
-      ComparisonOperator: 'LT'
-    }
-  },
-  AttributesToGet: ['id'],
+  FilterExpression: 'expires < :when',
+  ExpressionAttributeValues: {':when': {N: when.toString()}},
+  ProjectionExpression: 'id',
   ExclusiveStartKey: startKey
 });
 
