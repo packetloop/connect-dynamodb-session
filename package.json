@@ -42,6 +42,7 @@
     "codeclimate-test-reporter": "0.3.1",
     "eslint": "2.8.0",
     "eslint-config-airbnb": "8.0.0",
+    "eslint-plugin-import": "1.6.0",
     "glob": "7.0.3",
     "local-dynamo": "0.2.0",
     "sinon": "1.17.3",
