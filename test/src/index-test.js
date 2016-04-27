@@ -1,5 +1,3 @@
-'use strict';
-
 import {withFakeTimers} from '../helpers';
 import sinon from 'sinon';
 require('sinon-stub-promise')(sinon);

@@ -1,5 +1,3 @@
-'use strict';
-
 import {sequence} from '../helpers';
 import localDynamo from 'local-dynamo';
 import AWS from 'aws-sdk';

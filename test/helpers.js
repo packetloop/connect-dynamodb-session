@@ -1,4 +1,4 @@
-'use strict';
+/* eslint no-underscore-dangle: 0 */
 
 import sinon from 'sinon';
 import test from 'blue-tape';
