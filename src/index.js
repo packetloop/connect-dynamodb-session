@@ -1,5 +1,3 @@
-'use strict';
-
 import dynamo from './dynamo';
 
 const numberOr = (n, defaultVal) => {

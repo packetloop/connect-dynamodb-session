@@ -1,5 +1,3 @@
-'use strict';
-
 import test from 'blue-tape';
 import sinon from 'sinon';
 
