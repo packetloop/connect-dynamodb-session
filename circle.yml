@@ -12,7 +12,7 @@ test:
     - npm run test
     - npm run coverage
     - cp reports/*.xml ${CIRCLE_TEST_REPORTS}
-    - ./node_modules/.bin/codeclimate-test-reporter < ./reports/coverage/lcov.info
+    - cat ./reports/coverage/lcov.info | ./node_modules/.bin/codacy-coverage
 
 general:
   artifacts:
