@@ -1,6 +1,6 @@
 {
   "name": "connect-dynamodb-session",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Connect session store for AWS DynamoDB",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/packetloop/connect-dynamodb-session/issues"
   },
-  "peer-dependencies": {
+  "peerDependencies": {
     "aws-sdk": "2",
     "bluebird": "3"
   },
