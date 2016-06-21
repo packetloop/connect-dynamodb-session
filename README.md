@@ -3,9 +3,10 @@
 [DynamoDB](https://aws.amazon.com/dynamodb) session store for [Connect](https://github.com/senchalabs/connect) and [Express](http://expressjs.com/)
 
 [![Circle CI](https://circleci.com/gh/packetloop/connect-dynamodb-session.svg?style=svg)](https://circleci.com/gh/packetloop/connect-dynamodb-session)
-[![Test Coverage](https://codeclimate.com/github/packetloop/connect-dynamodb-session/badges/coverage.svg)](https://codeclimate.com/github/packetloop/connect-dynamodb-session/coverage)
-[![Code Climate](https://codeclimate.com/github/packetloop/connect-dynamodb-session/badges/gpa.svg)](https://codeclimate.com/github/packetloop/connect-dynamodb-session)
-[![Issue Count](https://codeclimate.com/github/packetloop/connect-dynamodb-session/badges/issue_count.svg)](https://codeclimate.com/github/packetloop/connect-dynamodb-session)
+[![npm](https://img.shields.io/npm/v/connect-dynamodb-session.svg)](https://www.npmjs.com/package/connect-dynamodb-session)
+[![npm](https://img.shields.io/npm/dm/connect-dynamodb-session.svg)](https://www.npmjs.com/package/connect-dynamodb-session)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/79deb4056e1d419091c5a011089fb3ef)](https://www.codacy.com/app/andysprout/connect-dynamodb-session?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=packetloop/connect-dynamodb-session&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/79deb4056e1d419091c5a011089fb3ef)](https://www.codacy.com/app/andysprout/connect-dynamodb-session?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=packetloop/connect-dynamodb-session&amp;utm_campaign=Badge_Coverage)
 [![Dependency Status](https://david-dm.org/packetloop/connect-dynamodb-session.svg)](https://david-dm.org/packetloop/connect-dynamodb-session)
 [![devDependency Status](https://david-dm.org/packetloop/connect-dynamodb-session/dev-status.svg)](https://david-dm.org/packetloop/connect-dynamodb-session#info=devDependencies)
 
