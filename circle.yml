@@ -2,7 +2,7 @@ version: 2
 
 
 jobs:
-  install:
+  build:
     working_directory: ~/app
     docker:
       - image: circleci/node:8.4.0
