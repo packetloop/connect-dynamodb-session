@@ -56,7 +56,6 @@
     "eslint": "^4.5.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
-    "local-dynamo": "^0.5.0",
     "sinon": "^3.2.1",
     "sinon-stub-promise": "^4.0.0"
   },

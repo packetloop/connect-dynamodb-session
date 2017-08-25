@@ -1,12 +1,11 @@
-import localDynamo from 'local-dynamo';
 import AWS from 'aws-sdk';
 import {sequence} from '../helpers';
 import createStore from '../../src/index';
 
 
 const DynamoStore = createStore({Store: null});
-const region = 'us-west-2';
-const endpoint = 'http://localhost:4567';
+const region = process.env.DYNAMO_REGION || 'us-west-2';
+const endpoint = process.env.DYNAMO_ENDPOINT;
 const options = {
   tableName: 'foo',
   endpoint,
@@ -32,15 +31,8 @@ const getItem = (t, fn) => awsClient.getItem({TableName: 'foo', Key: {id: {S: id
   });
 
 
-let localdb;
 let store;
 sequence('Should be able to get and set a session', [
-  (t, next) => {
-    t.comment('Launching local dynamodb');
-    localdb = localDynamo.launch({dir: null, port: 4567, stdio: 'inherit'});
-    next(1000); // wait for the java process to start
-  },
-
   (t, next) => {
     t.comment('Creating dynamo store');
     store = new DynamoStore(options);
@@ -245,8 +237,4 @@ sequence('Should be able to get and set a session', [
     t.end();
     next();
   }
-], start, 500)
-  .on('end', () => {
-    console.log('killing local dynamodb');
-    localdb.kill();
-  });
+], start, 500);

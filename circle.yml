@@ -6,6 +6,7 @@ jobs:
     working_directory: ~/app
     docker:
       - image: circleci/node:8.4.0
+      - image: sudix/docker-dynamo-local
 
 
     steps:
@@ -28,4 +29,9 @@ jobs:
       - run: yarn lint
 
 
-      - run: yarn test
+      - run:
+          name: Run tests
+          environment:
+            DYNAMO_ENDPOINT: http://dynamo:8000
+            DYNAMO_REGION: us-west-2
+          command: yarn test
