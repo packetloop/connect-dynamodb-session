@@ -1,6 +1,6 @@
 {
   "name": "connect-dynamodb-session",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Connect session store for AWS DynamoDB",
   "main": "index.js",
   "scripts": {
