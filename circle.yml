@@ -1,19 +1,37 @@
-machine:
-  node:
-    version: 5.10.1
+version: 2
 
-dependencies:
-  pre:
-    - npm set progress=false
 
-test:
-  override:
-    - npm run lint -- --debug --output-file reports/lint.xml --format junit
-    - npm run test
-    - npm run coverage
-    - cp reports/*.xml ${CIRCLE_TEST_REPORTS}
-    - cat ./reports/coverage/lcov.info | ./node_modules/.bin/codacy-coverage
+jobs:
+  build:
+    working_directory: ~/app
+    docker:
+      - image: circleci/node:8.4.0
+      - image: sudix/docker-dynamo-local
 
-general:
-  artifacts:
-    - reports
+
+    steps:
+      - checkout
+
+
+      - restore_cache:
+          key: deps-{{ checksum "yarn.lock" }}
+
+
+      - run: yarn install --pure-lockfile
+
+
+      - save_cache:
+          key: deps-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+
+
+      - run: yarn lint
+
+
+      - run:
+          name: Run tests
+          environment:
+            DYNAMO_ENDPOINT: http://localhost:8000
+            DYNAMO_REGION: us-west-2
+          command: yarn test

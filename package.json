@@ -4,12 +4,11 @@
   "description": "Connect session store for AWS DynamoDB",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint --cache .",
+    "lint": "eslint .",
     "pretest": "mkdir -p reports",
-    "test": "babel-node ./test",
-    "coverage": "babel-node node_modules/.bin/babel-istanbul cover --report text --report html --report lcov --dir reports/coverage ./test",
+    "test": "babel-node node_modules/.bin/tape ./test/src/*-test.js",
     "build": "babel src --out-dir lib",
-    "prepublish": "npm run build -s"
+    "prepublish": "yarn build"
   },
   "repository": {
     "type": "git",
@@ -23,6 +22,24 @@
     "express"
   ],
   "author": "Andrew Stewart <andy@universalsprout.com>",
+  "contributors": [
+    {
+      "name": "Andrew Stewart",
+      "email": "andy@universalsprout.com"
+    },
+    {
+      "name": "Nik Butenko",
+      "email": "nik@butenko.me"
+    },
+    {
+      "name": "Murtuz Chalabov",
+      "email": "murtuz@chalabov.info"
+    },
+    {
+      "name": "Hal Henke",
+      "email": "halhenke@gmail.com"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/packetloop/connect-dynamodb-session/issues"
@@ -31,22 +48,22 @@
     "aws-sdk": "2"
   },
   "devDependencies": {
-    "aws-sdk": "2.3.6",
-    "babel-cli": "6.7.7",
-    "babel-core": "6.7.7",
-    "babel-istanbul": "0.8.0",
-    "babel-plugin-add-module-exports": "0.2.1",
-    "babel-preset-es2015": "6.6.0",
-    "blue-tape": "0.2.0",
-    "codacy-coverage": "1.1.3",
-    "eslint": "2.8.0",
-    "eslint-config-airbnb": "8.0.0",
-    "eslint-plugin-import": "1.6.0",
-    "glob": "7.0.3",
-    "local-dynamo": "0.2.0",
-    "sinon": "1.17.3",
-    "sinon-stub-promise": "2.0.0",
-    "tap-spec": "4.1.1",
-    "tap-xunit": "1.3.1"
-  }
+    "aws-sdk": "^2.103.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "blue-tape": "^1.0.0",
+    "eslint": "^4.5.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "sinon": "^3.2.1",
+    "sinon-stub-promise": "^4.0.0"
+  },
+  "files": [
+    "lib",
+    "src",
+    "index.js",
+    "LICENSE",
+    "README.md"
+  ]
 }

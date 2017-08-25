@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  test:
+    image: mhart/alpine-node:base-8.4.0
+    volumes:
+      - ./:/app
+    working_dir: /app
+    environment:
+      DYNAMO_ENDPOINT: http://dynamo:8000
+      DYNAMO_REGION: us-west-2
+    command: /app/node_modules/.bin/babel-node /app/node_modules/.bin/tape /app/test/src/*-test.js
+    links:
+      - dynamo
+
+
+  dynamo:
+    image: sudix/docker-dynamo-local
+    command: -port 8000 -sharedDb
+    #    ports:
+    #      - 8000:8000
