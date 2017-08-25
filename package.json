@@ -22,6 +22,24 @@
     "express"
   ],
   "author": "Andrew Stewart <andy@universalsprout.com>",
+  "contributors": [
+    {
+      "name": "Andrew Stewart",
+      "email": "andy@universalsprout.com"
+    },
+    {
+      "name": "Nik Butenko",
+      "email": "nik@butenko.me"
+    },
+    {
+      "name": "Murtuz Chalabov",
+      "email": "murtuz@chalabov.info"
+    },
+    {
+      "name": "Hal Henke",
+      "email": "halhenke@gmail.com"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/packetloop/connect-dynamodb-session/issues"
