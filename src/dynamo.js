@@ -37,7 +37,8 @@ export default ({awsClient: aws, region, endpoint, tableName: TableName,
 
     put: (id, expires, content) =>
       awsClient.putItem({
-        TableName, Item: {
+        TableName,
+        Item: {
           id: {S: id},
           expires: {N: expires.toString()},
           content: {S: JSON.stringify(content)}

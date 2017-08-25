@@ -1,8 +1,9 @@
 import test from 'blue-tape';
 import sinon from 'sinon';
-require('sinon-stub-promise')(sinon);
-
+import stubPromise from 'sinon-stub-promise';
 import dynamo from '../../src/dynamo';
+
+stubPromise(sinon);
 
 const tableName = 'foo';
 

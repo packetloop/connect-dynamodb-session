@@ -1,8 +1,9 @@
-import {withFakeTimers} from '../helpers';
 import sinon from 'sinon';
-require('sinon-stub-promise')(sinon);
-
+import stubPromise from 'sinon-stub-promise';
+import {withFakeTimers} from '../helpers';
 import createStore from '../../src/index';
+
+stubPromise(sinon);
 
 const DynamoStore = createStore({Store: null});
 

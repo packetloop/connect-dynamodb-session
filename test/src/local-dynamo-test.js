@@ -1,8 +1,9 @@
-import {sequence} from '../helpers';
 import localDynamo from 'local-dynamo';
 import AWS from 'aws-sdk';
-
+import {sequence} from '../helpers';
 import createStore from '../../src/index';
+
+
 const DynamoStore = createStore({Store: null});
 const region = 'us-west-2';
 const endpoint = 'http://localhost:4567';
@@ -245,7 +246,7 @@ sequence('Should be able to get and set a session', [
     next();
   }
 ], start, 500)
-.on('end', () => {
-  console.log('killing local dynamodb');
-  localdb.kill();
-});
+  .on('end', () => {
+    console.log('killing local dynamodb');
+    localdb.kill();
+  });
